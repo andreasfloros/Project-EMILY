@@ -59,10 +59,10 @@ void print_complex_array(complex_float * array, int length){
 
 // example call to fft
 int main(){
-    int length = 32;
+    int length = 30;
     float time_series [length] = {1}; // kronecker delta
-    complex_float complex_time_series [16];
-    for (int n = 0 ; n < 16; n++){
+    complex_float complex_time_series [length];
+    for (int n = 0 ; n < length; n++){
         complex_time_series[n] = time_series[n]; // convert to complex type
     }
     print_complex_array(complex_time_series, length);
