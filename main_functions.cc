@@ -1,5 +1,7 @@
 /* amended to compile */
 
+// needed for cpp compilation
+// comment out if on Arduino
 #include "tensorflow/lite/micro/examples/micro_speech/main_functions.h"
 
 
