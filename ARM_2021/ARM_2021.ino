@@ -1,11 +1,7 @@
-// Haven't tested this yet since we don't have the model.h ready
-// For now: Need fully dense model with input dimension being a power of two
-// Preprocess with FFT (add some avergaing if you want too)
-
 // For reading the audio data
 #include <PDM.h>
 // For preprocessing
-#include <arduinoFFT.h>
+//#include <arduinoFFT.h>
 // ML related
 #include <TensorFlowLite.h>
 #include <tensorflow/lite/micro/all_ops_resolver.h>
@@ -13,19 +9,21 @@
 #include <tensorflow/lite/micro/micro_interpreter.h>
 #include <tensorflow/lite/schema/schema_generated.h>
 #include <tensorflow/lite/version.h>
-#include "model.h"
+#include <model.cc>
+
+//arduinoFFT FFT = arduinoFFT();
 
 // Parameters for reading the audio data
-const int BUFFER_SIZE = 512;
-static const int SAMPLE_RATE = 16000;
+static const unsigned short BUFFER_SIZE = 32768;
+static const unsigned short SAMPLE_RATE = 16000;
 static const char CHANNELS = 1;
 // buffer to read samples into, each sample is 16-bits
-int sampleBuffer [BUFFER_SIZE];
-volatile int samplesRead;
+short sampleBuffer [BUFFER_SIZE / 2];
+volatile unsigned short samplesRead;
 
 // Parameters for DSP
-double realPart [BUFFER_SIZE];
-double imagPart [BUFFER_SIZE];
+// double realPart [BUFFER_SIZE / 2];
+// double imagPart [BUFFER_SIZE / 2];
 
 // Parameters for ML
 // global variables used for TensorFlow Lite (Micro)
@@ -34,7 +32,7 @@ tflite::MicroErrorReporter tflErrorReporter;
 // pull in all the TFLM ops, you can remove this line and
 // only pull in the TFLM ops you need, if would like to reduce
 // the compiled size of the sketch.
-tflite::ops::micro::AllOpsResolver tflOpsResolver;
+tflite::AllOpsResolver tflOpsResolver;
 
 const tflite::Model* tflModel = nullptr;
 tflite::MicroInterpreter* tflInterpreter = nullptr;
@@ -43,7 +41,7 @@ TfLiteTensor* tflOutputTensor = nullptr;
 
 // Create a static memory buffer for TFLM, the size may need to
 // be adjusted based on the model you are using
-constexpr int tensorArenaSize = 8 * 1024; // Not sure what this should be changed to
+constexpr unsigned short tensorArenaSize = 8 * 280;
 byte tensorArena[tensorArenaSize];
 
 // array to map response index to a name
@@ -83,7 +81,7 @@ void setup() {
   // Get pointers for the model's input and output tensors
   tflInputTensor = tflInterpreter->input(0);
   tflOutputTensor = tflInterpreter->output(0);
-  delay(1000);
+  delay(1024);
 }
 
 void loop() {
@@ -94,37 +92,42 @@ void loop() {
     runInference(); // Run inference
     samplesRead = 0; // no new samples left
   }
-  delay(1000)
+  delay(1024);
 }
 
 void updateSampleBuffer() {
   // Query the number of available bytes
-  int bytesAvailable = PDM.available();
+  unsigned short bytesAvailable = PDM.available();
 
   // 16-bit, 2 bytes per sample
   samplesRead = bytesAvailable / 2;
-  for (int i = 0; i < BUFFER_SIZE - samplesRead; i++){
+  for (unsigned short i = 0; i < BUFFER_SIZE / 2 - samplesRead; i++){
     sampleBuffer[i] = sampleBuffer[i + samplesRead];
   }
   // Read into the sample buffer
-  PDM.read(&(sampleBuffer[BUFFER_SIZE - samplesRead]), bytesAvailable);
+  PDM.read(&(sampleBuffer[BUFFER_SIZE / 2 - samplesRead]), bytesAvailable);
 }
 
 void preprocessSampleBuffer() {
-  // Setup answer arrays
-  for (int i = 0; i < BUFFER_SIZE; i++){
-    realPart[i] = int8_t(sampleBuffer[i]);
-    imagPart[i] = 0.0;
-  }
-  // Compute the FFT
-  FFT.Compute(realPart, imagPart, BUFFER_SIZE, FFT_FORWARD);
-  // Compute the magnitude (stored in realPart)
-  FFT.ComplexToMagnitude(realPart, imagPart, BUFFER_SIZE);
+ // Setup answer arrays
+//  for (unsigned short i = 0; i < BUFFER_SIZE / 2; i++){
+//    realPart[i] = int8_t(sampleBuffer[i]);
+//    imagPart[i] = 0.0;
+//  }
+//  // Compute the FFT
+//  FFT.Compute(realPart, imagPart, BUFFER_SIZE / 2, FFT_FORWARD);
+//  // Compute the magnitude (stored in realPart)
+//  FFT.ComplexToMagnitude(realPart, imagPart, BUFFER_SIZE / 2);
 }
 
 void featuresToInput(){
-  for (int i = 0; i < BUFFER_SIZE; i++){
-    tflInputTensor->data.f[i] = realPart[i];
+  for (unsigned short i = 0; i < BUFFER_SIZE / 2; i+= 16){
+    float avg = 0;
+    for (unsigned short j = 0; j < 16; j++){
+      avg += sampleBuffer[i+j];
+    }
+    avg = avg / 16;
+    tflInputTensor->data.f[i] = avg;
   }
 }
 
