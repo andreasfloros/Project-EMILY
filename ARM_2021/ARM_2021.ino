@@ -15,10 +15,11 @@
 
 // Parameters for reading the audio data
 static const unsigned short BUFFER_SIZE = 32768;
+static const unsigned short SAMPLE_BUFFER_SIZE = BUFFER_SIZE / 2;
 static const unsigned short SAMPLE_RATE = 16000;
 static const char CHANNELS = 1;
 // buffer to read samples into, each sample is 16-bits
-short sampleBuffer [BUFFER_SIZE / 2];
+short sampleBuffer [SAMPLE_BUFFER_SIZE];
 volatile unsigned short samplesRead;
 
 // Parameters for DSP
@@ -41,7 +42,7 @@ TfLiteTensor* tflOutputTensor = nullptr;
 
 // Create a static memory buffer for TFLM, the size may need to
 // be adjusted based on the model you are using
-constexpr unsigned short tensorArenaSize = 8 * 280;
+constexpr unsigned short tensorArenaSize = 8 * 1024;
 byte tensorArena[tensorArenaSize];
 
 // array to map response index to a name
@@ -50,7 +51,7 @@ const char* RESPONSES[] = {
   "no"
 };
 
-#define NUM_RESPONSES (sizeof(RESPONSES) / sizeof(RESPONSES[0]))
+unsigned short NUM_RESPONSES = (sizeof(RESPONSES) / sizeof(RESPONSES[0]));
 
 
 void setup() {
@@ -101,11 +102,11 @@ void updateSampleBuffer() {
 
   // 16-bit, 2 bytes per sample
   samplesRead = bytesAvailable / 2;
-  for (unsigned short i = 0; i < BUFFER_SIZE / 2 - samplesRead; i++){
+  for (unsigned short i = 0; i < SAMPLE_BUFFER_SIZE - samplesRead; i++){
     sampleBuffer[i] = sampleBuffer[i + samplesRead];
   }
   // Read into the sample buffer
-  PDM.read(&(sampleBuffer[BUFFER_SIZE / 2 - samplesRead]), bytesAvailable);
+  PDM.read(&(sampleBuffer[SAMPLE_BUFFER_SIZE - samplesRead]), bytesAvailable);
 }
 
 void preprocessSampleBuffer() {
@@ -121,31 +122,28 @@ void preprocessSampleBuffer() {
 }
 
 void featuresToInput(){
-  for (unsigned short i = 0; i < BUFFER_SIZE / 2; i+= 16){
+  for (unsigned short i = 0; i < SAMPLE_BUFFER_SIZE; i+= 16){
     float avg = 0;
     for (unsigned short j = 0; j < 16; j++){
       avg += sampleBuffer[i+j];
     }
     avg = avg / 16;
-    tflInputTensor->data.f[i] = avg;
+    tflInputTensor->data.f[i / 16] = avg;
   }
 }
 
 void runInference(){
   // Run inferencing
   TfLiteStatus invokeStatus = tflInterpreter->Invoke();
-
   if (invokeStatus != kTfLiteOk) {
     Serial.println("Invoke failed!");
     while (1);
     return;
   }
-
   // Loop through the output tensor values from the model
-  for (int i = 0; i < NUM_RESPONSES; i++) {
+  for (unsigned short i = 0; i < NUM_RESPONSES; i++) {
     Serial.print(RESPONSES[i]);
     Serial.print(": ");
     Serial.println(tflOutputTensor->data.f[i]);
   }
-  Serial.println();
 }
