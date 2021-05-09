@@ -122,7 +122,7 @@ void preprocessSampleBuffer() {
 }
 
 void featuresToInput(){
-  for (unsigned short i = 0; i < SAMPLE_BUFFER_SIZE; i+= 16){
+  for (unsigned short i = 0; i < SAMPLE_BUFFER_SIZE / 2; i+= 16){
     float avg = 0;
     for (unsigned short j = 0; j < 16; j++){
       avg += sampleBuffer[i+j];
