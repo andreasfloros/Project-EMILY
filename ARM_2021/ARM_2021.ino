@@ -13,16 +13,16 @@
 #include <model.cc>
 
 // Parameters for reading the audio data
-static const unsigned short BUFFER_SIZE = 32768;
-static const unsigned short SAMPLE_BUFFER_SIZE = BUFFER_SIZE / 2;
+static const unsigned short BUFFER_SIZE = 512;
+static const unsigned short SAMPLE_BUFFER_SIZE = 32768 / 2;
 static const unsigned short SAMPLE_RATE = 16000;
 static const char CHANNELS = 1;
 // buffer to read samples into, each sample is 16-bits
-static short sampleBuffer [SAMPLE_BUFFER_SIZE];
+short sampleBuffer [SAMPLE_BUFFER_SIZE + 1];
 volatile unsigned short samplesRead;
 
 // Parameters for DSP
-static char fft [SAMPLE_BUFFER_SIZE];
+char fft [SAMPLE_BUFFER_SIZE];
 
 // Parameters for ML
 // global variables used for TensorFlow Lite (Micro)
@@ -55,8 +55,8 @@ unsigned short NUM_RESPONSES = (sizeof(RESPONSES) / sizeof(RESPONSES[0]));
 void setup() {
   Serial.begin(9600);
   while (!Serial);
-  PDM.onReceive(updateSampleBuffer);
   PDM.setBufferSize(BUFFER_SIZE);
+  PDM.onReceive(updateSampleBuffer);
   // initialize PDM with:
   // - one channel (mono mode)
   // - a 16 kHz sample rate
@@ -87,9 +87,8 @@ void loop() {
   // Wait for new samples
   if (samplesRead) {
     preprocessSampleBuffer(); // features (magnitude of FFT) is in realPart
-    Serial.println("PREPROCESS DONE");
     featuresToInput(); // Store features to input tensor
-    Serial.println("F TO I DONE");
+    Serial.println("STARTING INFERENCE");
     runInference(); // Run inference
     Serial.println("INFERENCE DONE");
     samplesRead = 0; // no new samples left
@@ -115,7 +114,6 @@ void preprocessSampleBuffer() {
     fft[i] = char(sampleBuffer[i]);
   }
   // Compute the FFT
-  Serial.println("ENTERING FFT COMPUTE");
   int scale = fix_fftr(fft, 14, 0);
 }
 
@@ -128,6 +126,10 @@ void featuresToInput(){
     avg = avg / 16;
     tflInputTensor->data.f[i / 16] = avg;
   }
+  Serial.print("Example sample: ");
+  Serial.println(sampleBuffer[0]);
+  Serial.print("Example feature: ");
+  Serial.println(tflInputTensor->data.f[0]);
 }
 
 void runInference(){
