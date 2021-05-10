@@ -1,7 +1,8 @@
 // For reading the audio data
 #include <PDM.h>
 // For preprocessing
-#include <arduinoFFT.h>
+#include <fix_fft.h>
+
 // ML related
 #include <TensorFlowLite.h>
 #include <tensorflow/lite/micro/all_ops_resolver.h>
@@ -11,20 +12,17 @@
 #include <tensorflow/lite/version.h>
 #include <model.cc>
 
-arduinoFFT FFT = arduinoFFT();
-
 // Parameters for reading the audio data
 static const unsigned short BUFFER_SIZE = 32768;
 static const unsigned short SAMPLE_BUFFER_SIZE = BUFFER_SIZE / 2;
 static const unsigned short SAMPLE_RATE = 16000;
 static const char CHANNELS = 1;
 // buffer to read samples into, each sample is 16-bits
-short sampleBuffer [SAMPLE_BUFFER_SIZE];
+static short sampleBuffer [SAMPLE_BUFFER_SIZE];
 volatile unsigned short samplesRead;
 
 // Parameters for DSP
-float realPart [SAMPLE_BUFFER_SIZE];
-float imagPart [SAMPLE_BUFFER_SIZE];
+static char fft [SAMPLE_BUFFER_SIZE];
 
 // Parameters for ML
 // global variables used for TensorFlow Lite (Micro)
@@ -57,7 +55,6 @@ unsigned short NUM_RESPONSES = (sizeof(RESPONSES) / sizeof(RESPONSES[0]));
 void setup() {
   Serial.begin(9600);
   while (!Serial);
-  pinMode(LED_BUILTIN, OUTPUT);
   PDM.onReceive(updateSampleBuffer);
   PDM.setBufferSize(BUFFER_SIZE);
   // initialize PDM with:
@@ -89,13 +86,14 @@ void setup() {
 void loop() {
   // Wait for new samples
   if (samplesRead) {
-    digitalWrite(LED_BUILTIN, LOW);
     preprocessSampleBuffer(); // features (magnitude of FFT) is in realPart
+    Serial.println("PREPROCESS DONE");
     featuresToInput(); // Store features to input tensor
+    Serial.println("F TO I DONE");
     runInference(); // Run inference
+    Serial.println("INFERENCE DONE");
     samplesRead = 0; // no new samples left
   }
-  delay(1024);
 }
 
 void updateSampleBuffer() {
@@ -114,20 +112,18 @@ void updateSampleBuffer() {
 void preprocessSampleBuffer() {
  // Setup answer arrays
   for (unsigned short i = 0; i < SAMPLE_BUFFER_SIZE; i++){
-    realPart[i] = sampleBuffer[i];
-    imagPart[i] = 0.0;
+    fft[i] = char(sampleBuffer[i]);
   }
   // Compute the FFT
-  FFT.Compute(realPart, imagPart, SAMPLE_BUFFER_SIZE, FFT_FORWARD);
-  // Compute the magnitude (stored in realPart)
-  FFT.ComplexToMagnitude(realPart, imagPart, SAMPLE_BUFFER_SIZE);
+  Serial.println("ENTERING FFT COMPUTE");
+  int scale = fix_fftr(fft, 14, 0);
 }
 
 void featuresToInput(){
   for (unsigned short i = 0; i < SAMPLE_BUFFER_SIZE / 2; i+= 16){
     float avg = 0;
     for (unsigned short j = 0; j < 16; j++){
-      avg += realPart[i+j];
+      avg += fft[i+j];
     }
     avg = avg / 16;
     tflInputTensor->data.f[i / 16] = avg;
@@ -145,8 +141,8 @@ void runInference(){
   // Loop through the output tensor values from the model
   unsigned short argmax = 0;
   float mx = 0;
-  for (unsigned short i = 0; i < NUM_RESPONSES; i++) {
-    Serial.print(RESPONSES[i]);
+  for (unsigned short i = 0; i < 36; i++) {
+    Serial.print(i);
     Serial.print(": ");
     Serial.println(tflOutputTensor->data.f[i]);
     if (tflOutputTensor->data.f[i] > mx){
@@ -154,8 +150,10 @@ void runInference(){
       argmax = i;
     }
   }
-  if (argmax == 18){ // according to Vasileios this is the right index for yes
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(10000);
-  }
+//  Serial.print("yes");
+//  Serial.print(": ");
+//  Serial.println(tflOutputTensor->data.f[18]);
+//  Serial.print("no");
+//  Serial.print(": ");
+//  Serial.println(tflOutputTensor->data.f[31]);
 }
