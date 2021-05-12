@@ -13,7 +13,7 @@
 #include <model.cc>
 
 // Parameters for reading the audio data
-static const unsigned short BUFFER_SIZE = 512;
+static const unsigned short BUFFER_SIZE = 2048;
 static const unsigned short SAMPLE_BUFFER_SIZE = 32768 / 2;
 static const unsigned short SAMPLE_RATE = 16000;
 static const char CHANNELS = 1;
@@ -22,7 +22,7 @@ short sampleBuffer [SAMPLE_BUFFER_SIZE + 1];
 volatile unsigned short samplesRead;
 
 // Parameters for DSP
-char fft [SAMPLE_BUFFER_SIZE];
+int8_t fft [SAMPLE_BUFFER_SIZE];
 
 // Parameters for ML
 // global variables used for TensorFlow Lite (Micro)
@@ -40,7 +40,7 @@ TfLiteTensor* tflOutputTensor = nullptr;
 
 // Create a static memory buffer for TFLM, the size may need to
 // be adjusted based on the model you are using
-constexpr unsigned short tensorArenaSize = 8 * 1024;
+constexpr unsigned short tensorArenaSize = 28 * 1024;
 byte tensorArena[tensorArenaSize];
 
 // array to map response index to a name
@@ -57,6 +57,7 @@ void setup() {
   while (!Serial);
   PDM.setBufferSize(BUFFER_SIZE);
   PDM.onReceive(updateSampleBuffer);
+
   // initialize PDM with:
   // - one channel (mono mode)
   // - a 16 kHz sample rate
@@ -64,6 +65,7 @@ void setup() {
     Serial.println("Failed to start PDM!");
     while (1);
   }
+  //PDM.setGain(0);
   // get the TFL representation of the model byte array
   tflModel = tflite::GetModel(model);
   if (tflModel->version() != TFLITE_SCHEMA_VERSION) {
@@ -88,9 +90,9 @@ void loop() {
   if (samplesRead) {
     preprocessSampleBuffer(); // features (magnitude of FFT) is in realPart
     featuresToInput(); // Store features to input tensor
-    Serial.println("STARTING INFERENCE");
+    //Serial.println("STARTING INFERENCE");
     runInference(); // Run inference
-    Serial.println("INFERENCE DONE");
+    //Serial.println("INFERENCE DONE");
     samplesRead = 0; // no new samples left
   }
 }
@@ -106,12 +108,13 @@ void updateSampleBuffer() {
   }
   // Read into the sample buffer
   PDM.read(&(sampleBuffer[SAMPLE_BUFFER_SIZE - samplesRead]), bytesAvailable);
+
 }
 
 void preprocessSampleBuffer() {
  // Setup answer arrays
   for (unsigned short i = 0; i < SAMPLE_BUFFER_SIZE; i++){
-    fft[i] = char(sampleBuffer[i]);
+    fft[i] = int8_t(sampleBuffer[i]);
   }
   // Compute the FFT
   int scale = fix_fftr(fft, 14, 0);
@@ -126,10 +129,10 @@ void featuresToInput(){
     avg = avg / 16;
     tflInputTensor->data.f[i / 16] = avg;
   }
-  Serial.print("Example sample: ");
-  Serial.println(sampleBuffer[0]);
-  Serial.print("Example feature: ");
-  Serial.println(tflInputTensor->data.f[0]);
+  //Serial.print("Example sample: ");
+  //Serial.println(sampleBuffer[0]);
+  //Serial.print("Example feature: ");
+  //Serial.println(tflInputTensor->data.f[0]);
 }
 
 void runInference(){
@@ -140,10 +143,22 @@ void runInference(){
     while (1);
     return;
   }
+  for (unsigned short i = 0; i < SAMPLE_BUFFER_SIZE; i++){
+    if (i == 0){
+      Serial.print("[");
+    }
+    Serial.print(sampleBuffer[i]);
+    if (i < SAMPLE_BUFFER_SIZE - 1){
+      Serial.print(", ");
+    }
+    else{
+      Serial.println("]");
+    }
+  }
   // Loop through the output tensor values from the model
   unsigned short argmax = 0;
   float mx = 0;
-  for (unsigned short i = 0; i < 36; i++) {
+  for (unsigned short i = 0; i < 4; i++) {
     Serial.print(i);
     Serial.print(": ");
     Serial.println(tflOutputTensor->data.f[i]);
@@ -152,10 +167,4 @@ void runInference(){
       argmax = i;
     }
   }
-//  Serial.print("yes");
-//  Serial.print(": ");
-//  Serial.println(tflOutputTensor->data.f[18]);
-//  Serial.print("no");
-//  Serial.print(": ");
-//  Serial.println(tflOutputTensor->data.f[31]);
 }
