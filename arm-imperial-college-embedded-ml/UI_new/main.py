@@ -256,7 +256,7 @@ class main_app():
 
         self.processing_method_radio_button_none = ttk.Radiobutton(self.processing_method_frame, text = "AVG ", value = "NONE", variable = self.selected_processing_method, command = self.processing_method_radio_button_callback)
         self.processing_method_radio_button_stft = ttk.Radiobutton(self.processing_method_frame, text = "STFT", value = "STFT", variable = self.selected_processing_method)
-        self.processing_method_radio_button_rms = ttk.Radiobutton(self.processing_method_frame, text = "RMS ", value = "RMS", variable = self.selected_processing_method, command = self.processing_method_radio_button_callback)
+        self.processing_method_radio_button_rms = ttk.Radiobutton(self.processing_method_frame, text = "WRMS", value = "RMS", variable = self.selected_processing_method, command = self.processing_method_radio_button_callback)
         self.processing_method_radio_button_stft.invoke()
         self.processing_method_radio_button_stft.config(command = self.processing_method_radio_button_callback)
 
