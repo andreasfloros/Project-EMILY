@@ -1,19 +1,36 @@
-# Project EMILY
+# EMILY
 
-An Embedded Machine Learning Ecosystem (EMLE hence EMILY) with the aim of simplifying the deployment of audio classifier to microcontrollers.
+Embedded Machine Learning Ecosystem (EMLE -> EMILY) is an intuitive, beginner-friendly platform aimed at simplifying the creation and deployment of machine learning models on embedded devices.
 
-Application tested and is working on Windows 10 and on MacOS (with limited support).
 
-Boards tested: Arduino Nano 33 BLE Sense.
+Our simple, easy-to-use User Interface (UI) guides the user through the entire pipeline required for constructing an audio classifier and deploying it to a microcontroller. This includes selecting a dataset, choosing and tuning the audio processing methods, configuring ML-related parameters for the model training, and finally directly uploading their models to Arduino for running inference, without the need for manual steps in the Arduino IDE. Our application is an all-in-one package.
 
-We provide the users with an intuive, easy to use User Interface (UI) where they can select their datasets, choose their processing methods and even configure some of the machine learning parameters. We also allow the users to directly upload their models to Arduino, without the use of the Arduino IDE. Our application is an all in one package.
 
-## Authors: 
-- Andreas Floros
-- Bharat Kumar
-- Hussain Kurabadwala
-- Vasileios Manginas
-- Stacey Wu
+Tested Operating Systems: Windows 10, MacOS (partial support)
+
+Tested Arduino Boards: [Arduino Nano 33 BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense)
+
+
+## How to run:
+Run the main.py python script.
+
+### Requirements:
+pip install the following:
+
+| package                       | version |
+|-------------------------------|:-------:|
+| python                        |  3.8.8  |
+| numpy                         |  1.19.5 |
+| tensorflow                    |  2.5.0  |
+| tensorflow-model-optimization |  0.5.0  |
+| librosa                       |  0.8.0  |
+| matplotlib                    |  3.3.4  |
+| hexdump                       |   3.3   |
+| pyserial                      |   3.5   |
+
+
+## Usage
+![home_page_gif](home_page.gif)
 
 ## Repository breakdown:
 
@@ -50,12 +67,10 @@ This folder contains what would be considered our "end product". Made up of the 
 8. **arduino_files (folder):** Contains the .ino script and the .h model file to be uploaded to the arduino.
 9. **Images (folder):** Contains images used as icons within the UI.
 
-#### Requirements:
-pip install the following:
-1. tensorflow
-2. librosa
-3. matplotlib
-4. tensorflow_model_optimization
-5. hexdump
 
----
+## Authors: 
+- Andreas Floros
+- Bharat Kumar
+- Hussain Kurabadwala
+- Vasileios Manginas
+- Stacey Wu
