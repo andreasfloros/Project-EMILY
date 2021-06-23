@@ -26,9 +26,6 @@ Tested Arduino Boards: [Arduino Nano 33 BLE Sense](https://store.arduino.cc/ardu
 
 ## Repository breakdown + Usage Examples:
 
-### UI: 
-This folder contains what would be considered our "end product". Made up of the following:
-
 
 1. **main.py:** Main UI frontend file. Everything from the backend is called from here.
 ![home_page_gif](https://github.com/andreasfloros/Project-EMILY/blob/main/UI_gifs/home_page.gif)
