@@ -23,7 +23,7 @@ This folder contains what would be considered our "end product". Made up of the 
 
 
 1. **main.py:** Main UI frontend file. Everything from the backend is called from here.
-![home_page_gif](home_page.gif)
+![home_page_gif](https://github.com/andreasfloros/Project-EMILY/blob/main/UI_gifs/home_page.gif)
 
 ---
 
@@ -32,7 +32,7 @@ This folder contains what would be considered our "end product". Made up of the 
             1. Choose the source of the dataset. Options: load from local directory, download from URL, create from within our UI
             2. Set important dataset parameters, such as the expected track duration and the sampling rate
       
-      ![dataset_page_gif](dataset_page.gif)
+      ![dataset_page_gif](https://github.com/andreasfloros/Project-EMILY/blob/main/UI_gifs/dataset_page.gif)
 
       ---
 
@@ -41,7 +41,7 @@ This folder contains what would be considered our "end product". Made up of the 
             2. Configure processing by tuning algorithm parameters
             3. Option to streamline the input pipeline
       
-      ![processing_page_gif](processing_page.gif)
+      ![processing_page_gif](https://github.com/andreasfloros/Project-EMILY/blob/main/UI_gifs/processing_page.gif)
       
       ---
       
@@ -52,7 +52,7 @@ This folder contains what would be considered our "end product". Made up of the 
             3. Model quantization and quantization-aware
             5. Convert model to form readable by the microcontroller and save it in user-selected destination
       
-      ![training_page_gif](training_page.gif)
+      ![training_page_gif](https://github.com/andreasfloros/Project-EMILY/blob/main/UI_gifs/training_page.gif)
       
       ---
       
@@ -62,7 +62,7 @@ This folder contains what would be considered our "end product". Made up of the 
             3. Automated deployment to microcontroller through  Arduino-CLI.
             4. Live feedback from the CLI through a custom CMD.
       
-      ![arduino_page_gif](arduino_page.gif)
+      ![arduino_page_gif](https://github.com/andreasfloros/Project-EMILY/blob/main/UI_gifs/arduino_page.gif)
 
       ---
 
