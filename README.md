@@ -31,6 +31,10 @@ pip install the following:
 
 ## Usage
 ![home_page_gif](home_page.gif)
+![dataset_page_gif](dataset_page.gif)
+![processing_page_gif](processing_page.gif)
+![training_page_gif](training_page.gif)
+![arduino_page_gif](arduino_page.gif)
 
 ## Repository breakdown:
 
