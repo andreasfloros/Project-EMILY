@@ -14,7 +14,7 @@ Our application is an all-in-one package.
 
 
 ## How to run:
-Run the main.py python script.
+Run the main.py python script from the UI folder.
 
 __Requirements:__ For this project we only require that Python and PIP are installed. After this please run ```pip install -r requirements.txt``` using the requirements.txt file of the repository. This will automatically install all other packages used in the project.
 
