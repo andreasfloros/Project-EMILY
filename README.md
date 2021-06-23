@@ -3,18 +3,26 @@
 Embedded Machine Learning Ecosystem (EMLE -> EMILY) is an intuitive, beginner-friendly platform aimed at simplifying the creation and deployment of machine learning models on embedded devices.
 
 
-Our simple, easy-to-use User Interface (UI) guides the user through the entire pipeline required for constructing an audio classifier and deploying it to a microcontroller. This includes selecting a dataset, choosing and tuning the audio processing methods, configuring ML-related parameters for the model training, and finally directly uploading their models to Arduino for running inference, without the need for manual steps in the Arduino IDE. Our application is an all-in-one package.
+Our simple, easy-to-use User Interface (UI) guides the user through the entire pipeline required for constructing an audio classifier and deploying it to a microcontroller. This includes:
+- selecting a dataset,
+- choosing and tuning an audio processing method, 
+- configuring ML-related parameters for the model training,
+- directly uploading their models to Arduino for running inference (without the need for manual steps in the Arduino IDE).
 
+Our application is an all-in-one package.
 
-Tested Operating Systems: Windows 10, MacOS (partial support)
-
-Tested Arduino Boards: [Arduino Nano 33 BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense)
 
 
 ## How to run:
 Run the main.py python script.
 
 __Requirements:__ For this project we only require that Python and PIP are installed. After this please run ```pip install -r requirements.txt``` using the requirements.txt file of the repository. This will automatically install all other packages used in the project.
+
+Tested Operating Systems: Windows 10, MacOS (partial support)
+
+Tested Arduino Boards: [Arduino Nano 33 BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense)
+
+
 
 ## Repository breakdown + Usage Examples:
 
@@ -29,7 +37,7 @@ This folder contains what would be considered our "end product". Made up of the 
 
 2. **scripts (folder):** Contains all scripts that form the backend, and is divided further into four folders which represent the four blocks in the pipeline:
       1. **dataset:** Contains everything related to accessing and loading the audio dataset. Achieves the following:
-            1. Choose the source of the dataset. Options: load from local directory, download from URL, create from within our UI
+            1. Choose the source of the dataset. Options: load from local directory, download from URL, create dataset within our UI
             2. Set important dataset parameters, such as the expected track duration and the sampling rate
       
       ![dataset_page_gif](https://github.com/andreasfloros/Project-EMILY/blob/main/UI_gifs/dataset_page.gif)
@@ -49,7 +57,7 @@ This folder contains what would be considered our "end product". Made up of the 
             1. Set various ML-related parameters
             2. Choose between Convolutional and Dense models.
             2. Real-time plotting of model performance
-            3. Model quantization and quantization-aware
+            3. Model quantization and quantization-aware training
             5. Convert model to form readable by the microcontroller and save it in user-selected destination
       
       ![training_page_gif](https://github.com/andreasfloros/Project-EMILY/blob/main/UI_gifs/training_page.gif)
@@ -71,6 +79,7 @@ This folder contains what would be considered our "end product". Made up of the 
 5. **Images (folder):** Contains images used as icons within the UI.
 
 
+
 ## Authors: 
 - Andreas Floros
 - Bharat Kumar
@@ -82,7 +91,6 @@ This folder contains what would be considered our "end product". Made up of the 
 ARM Team:
 - Henri Woodcock
 - Sandeep Mistry
-- Carlo Grisafi
 
 Project supervisor (Imperial College London):
 - Dr. Krystian Mikolajczyk
