@@ -1,6 +1,12 @@
-# Imperial College Embedded ML
+# Project EMILY
 
----
+An Embedded Machine Learning Ecosystem (EMLE hence EMILY) with the aim of simplifying the deployment of audio classifier to microcontrollers.
+
+Application tested and is working on Windows 10 and on MacOS (with limited support).
+
+Boards tested: Arduino Nano 33 BLE Sense.
+
+We provide the users with an intuive, easy to use User Interface (UI) where they can select their datasets, choose their processing methods and even configure some of the machine learning parameters. We also allow the users to directly upload their models to Arduino, without the use of the Arduino IDE. Our application is an all in one package.
 
 ## Authors: 
 - Andreas Floros
@@ -8,8 +14,6 @@
 - Hussain Kurabadwala
 - Vasileios Manginas
 - Stacey Wu
-
----
 
 ## Repository breakdown:
 
