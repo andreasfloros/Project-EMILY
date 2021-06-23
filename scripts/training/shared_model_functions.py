@@ -48,7 +48,7 @@ def build_conv_model(input_shape, number_of_classes):
 
     # flatten output and feed it into dense layer
     model.add(Flatten())
-    model.add(Dense(4))
+    model.add(Dense(10))
     model.add(Dropout(0.3))
 
 
