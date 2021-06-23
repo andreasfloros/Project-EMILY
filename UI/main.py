@@ -173,6 +173,8 @@ class main_app():
             page = str(event.widget).split(".")[-1]
             self.load_page(page)
 
+# DATA PAGE
+
     def setup_data_page(self):
         self.data_page_frame = ttk.Frame(self.background_frame)
         self.setup_dataset_source_frame()
@@ -346,6 +348,7 @@ class main_app():
             self.record_dataset_make_frame.pack_forget()
             self.expected_duration_frame.pack_forget()
             self.sample_rate_frame.pack_forget()
+            self.browse_dataset_label.config(text=pad_to_max("Dataset URL:", free = 4))
             self.browse_dataset_global_frame.pack(fill = tk.X, side = tk.TOP, expand = True)
             self.expected_duration_frame.pack(expand = True, fill = tk.X, side = tk.TOP)
             self.sample_rate_frame.pack(fill = tk.X, expand = True)
