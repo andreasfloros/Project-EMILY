@@ -425,12 +425,12 @@ def send_to_arduino(app):
 		platform_name = check_platform()
 
 		if(h_path and h_path.split(".")[-1] == "h"): # this will run if there is any path available, maybe check for the extension?
-			Move_h(h_path, platform_name, wd, app, file_name = "arduino_files")
+			Move_h(h_path, platform_name, wd, app, file_name = "arduino_inference_script")
 		else:
 			app.menu_label.configure(text = "Please select a valid .h file")
 			return
 		cli_is_installed = check_cli(platform_name, app)
-		Start_Process(cli_is_installed, platform_name, app, file_name= "arduino_files")
+		Start_Process(cli_is_installed, platform_name, app, file_name= "arduino_inference_script")
 
 	except:
 		return

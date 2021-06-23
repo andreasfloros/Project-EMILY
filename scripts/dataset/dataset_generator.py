@@ -95,7 +95,7 @@ def get_labels(save_path, labels):
 def upload_recording_script(app):
     platform_name = check_platform()
     cli_is_installed = check_cli(platform_name, app)
-    Start_Process(cli_is_installed, platform_name, app, file_name="make_data")
+    Start_Process(cli_is_installed, platform_name, app, file_name="arduino_record_script")
 
 def run_all(app, save_path, user_labels, NUM_RECORDINGS, SAMPLE_RATE, SECONDS_OF_AUDIO):
 
