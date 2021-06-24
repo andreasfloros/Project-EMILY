@@ -18,7 +18,7 @@ Run the main.py python script from the UI folder.
 
 __Requirements:__ For this project we only require that Python and PIP are installed. After this please run ```pip install -r requirements.txt``` using the requirements.txt file of the repository. This will automatically install all other packages used in the project.
 
-Tested Operating Systems: Windows 10, MacOS (partial support)
+Tested Operating Systems: Windows 10, Linux (partial support), MacOS (partial support)
 
 Tested Arduino Boards: [Arduino Nano 33 BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense)
 
