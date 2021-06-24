@@ -28,6 +28,7 @@ Tested Arduino Boards: [Arduino Nano 33 BLE Sense](https://store.arduino.cc/ardu
 
 
 1. **main.py:** Main UI frontend file. Everything from the backend is called from here. (the gif shown is the UI home page)
+
 ![home_page_gif](https://github.com/andreasfloros/Project-EMILY/blob/main/UI_gifs/home_page.gif)
 
 ---
@@ -71,9 +72,17 @@ Tested Arduino Boards: [Arduino Nano 33 BLE Sense](https://store.arduino.cc/ardu
 
       ---
 
-3. **imports.py:** Contains all imports currently used.
-4. **arduino_files (folder):** Contains the .ino script and the .h model file to be uploaded to the arduino.
-5. **Images (folder):** Contains images used as icons within the UI.
+3. **arduino_inference_script (folder):** Contains the following files:
+      1. Arduino script implementing the Arduino-side pipeline. This includes audio reception from the on-board microphone, audio signal processing, as well as inference using the uploaded model file.
+      2. A header (.h) file containing the model chosen for upload as well as other dataset and processing parameters that need to be communicated to the Arduino.
+4. **arduino_recording_script (folder):** Arduino script uploaded for recording a dataset from within the UI, since we utilize the arduino microphone.
+
+---
+
+5. **imports.py:** Contains all imports currently used.
+6. **Images (folder):** Contains images used as icons within the UI.
+7. **requirements.txt:** Contains all packages used in the project, used for installing allof them at the same time using PIP (see How to run section).
+8. **UI_gifs:** Contains GIFs of the UI in operation used in the README.
 
 
 
