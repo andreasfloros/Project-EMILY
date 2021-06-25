@@ -31,7 +31,10 @@ from tensorflow.keras.callbacks import Callback, EarlyStopping, ModelCheckpoint
 import tensorflow_model_optimization as tfmot
 
 import threading
-
+# FOR EXE
+import hexdump
+import sklearn.utils._weight_vector
+#
 
 import platform
 import subprocess
@@ -52,11 +55,18 @@ try:
 except AttributeError:
     wd = os.getcwd()
 
-menu_color = "#08646c"
+if os.name == "nt":
+    menu_color = "#08646c"
 
-background_color = "#03989e"
+    background_color = "#03989e"
 
-button_color = "#03989e"
+    button_color = "#03989e"
+else:
+    menu_color = "#ececec"
+
+    background_color = "#ececec"
+
+    button_color = "#ececec"
 
 home_window_size = "512x380"
 

@@ -58,6 +58,7 @@ class main_app():
                        "train_model" : tk.PhotoImage(file = os.path.join(wd,"Images","train_model.png")),
                        "upload_model" : tk.PhotoImage(file = os.path.join(wd,"Images","upload_model.png")),
                        "logo" : tk.PhotoImage(file = os.path.join(wd,"Images","logo.png")),
+                       "logo_mac" : tk.PhotoImage(file = os.path.join(wd,"Images","logo_mac.png")),
                        "record_button" : tk.PhotoImage(file = os.path.join(wd,"Images","record_button.png"))}
 
         if os.name == "nt": # looks have been tested on windows, mac and linux haven't been tested properly
@@ -132,7 +133,10 @@ class main_app():
 
     def setup_home_page(self):
         self.home_page_frame = ttk.Frame(self.background_frame)
-        background_label = tk.Label(self.home_page_frame, image = self.images["logo"])
+        if os.name == "nt":
+            background_label = tk.Label(self.home_page_frame, image = self.images["logo"])
+        else:
+            background_label = tk.Label(self.home_page_frame, image = self.images["logo_mac"])
         background_label.place(x=0, y=0, relwidth=1, relheight=1)
         self.load_data_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["load_data"], name = "data_page")
         self.load_data_button.bind("<ButtonRelease-1>", self.quad_button_callback)
@@ -593,7 +597,7 @@ class main_app():
         self.logs.pack(expand = True, fill = tk.BOTH)
         self.arduino_cmd.pack(side = tk.TOP, expand = True, fill = tk.BOTH)
         self.cmd = custom_cmd(self.logs)
-        # sys.stdout = self.cmd # COMMENT THIS LINE IF YOU WANT CMD OUTSIDE OF THE UI
+        sys.stdout = self.cmd # COMMENT THIS LINE IF YOU WANT CMD OUTSIDE OF THE UI
 
 
     def setup_arduino_settings_frame(self):
