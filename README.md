@@ -24,6 +24,10 @@ Tested Arduino Boards: [Arduino Nano 33 BLE Sense](https://store.arduino.cc/ardu
 
 __Executable:__ Download / Clone this repo and make sure you have the above requirements installed.
 
+Open the ```emily.spec``` file and change the ```pathex``` to the root directory of the project.
+
+In the same file, change line 24 such that the first argument of the tuple is the path to your local ```\\librosa\\util\\example_data```.
+
 Open terminal at the root of the project and type the following:
 
 ```pip install pyinstaller```
