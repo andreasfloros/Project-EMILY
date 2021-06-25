@@ -241,7 +241,6 @@ def Windows_Run_Batch(fqbn, com, core, file_name, app):
 
 	command_install_core = "arduino-cli core install " + core
 	command_compile = "arduino-cli compile --fqbn " + fqbn + " " + file_name
-
 	sys.stdout.write("Downloading dependencies... \n")
 	command_list = [command_install_core, command_compile]
 	for command in command_list:
@@ -357,7 +356,6 @@ def Move_h(source_path, platform_name, curr_path, app, file_name):
 	if(platform_name == "Windows"):
 		source_path = source_path.replace("/", "\\")
 	destination_path = os.path.join(curr_path, file_name, h_name)
-	print("Source: ", source_path, " Destination: ", destination_path)
 	if not os.path.exists(destination_path):
 		shutil.copy(source_path, destination_path)
 	else:
@@ -399,16 +397,18 @@ def send_to_arduino(app):
 		app.menu_label.configure(text = "Converting and uploading model...")
 		h_path = app.browse_model_entry.get()
 		platform_name = check_platform()
+
 		if(platform_name != "Darwin" and platform_name != "Linux" and platform_name != "Windows"):
 			app.menu_label.configure(text = "OS not supported")
 			raise Exception("OS Not supported")
 		if(h_path and h_path.split(".")[-1] == "h"): # this will run if there is any path available, maybe check for the extension?
-			Move_h(h_path, platform_name, wd, app, file_name = "arduino_inference_script")
+			Move_h(h_path, platform_name, wd, app, file_name="arduino_inference_script")
 		else:
 			app.menu_label.configure(text = "Please select a valid .h file")
 			return
 		cli_is_installed = check_cli(platform_name, app)
-		Start_Process(cli_is_installed, platform_name, app, file_name= "arduino_inference_script")
+		file_name = os.path.join('"' + wd, 'arduino_inference_script"')
+		Start_Process(cli_is_installed, platform_name, app, file_name)
 
 	except:
 		return

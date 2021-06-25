@@ -8,6 +8,7 @@
 
 # Imports: (install using pip3 if not already present)
 
+from typing import Text
 from numpy.lib.npyio import save
 from imports import *
 from scripts.arduino.arduino import *
@@ -95,7 +96,9 @@ def get_labels(save_path, labels):
 def upload_recording_script(app):
     platform_name = check_platform()
     cli_is_installed = check_cli(platform_name, app)
-    Start_Process(cli_is_installed, platform_name, app, file_name="arduino_record_script")
+    file_name = os.path.join('"' + wd, 'arduino_record_script"')
+    app.menu_label.configure(text = "Uploading the recording script, please wait!")
+    Start_Process(cli_is_installed, platform_name, app, file_name)
 
 def run_all(app, save_path, user_labels, NUM_RECORDINGS, SAMPLE_RATE, SECONDS_OF_AUDIO):
 
