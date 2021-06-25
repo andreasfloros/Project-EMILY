@@ -1,3 +1,4 @@
+from tkinter.constants import COMMAND
 from imports import *
 
 def check_platform():
@@ -147,30 +148,36 @@ def Download_Arduino_Dependencies(platform_name, app):
 	sys.stdout.write("Downloading arduino dependencies...\n")
 	dependencies_list = ["Arduino_TensorFlowLite", "Arduino_CMSIS-DSP"]
 	if(platform_name == "Windows"):
-		command_arduino_dependencies = 'arduino-cli lib download '
+		command_arduino_dependencies_download = 'arduino-cli lib download '
+		command_arduino_dependencies_install= 'arduino-cli lib install '
 		for x in dependencies_list:
-			command_temp = command_arduino_dependencies + x
-			with subprocess.Popen(command_temp, stdout=subprocess.PIPE, universal_newlines=True) as process:
-				for line in process.stdout:
-					sys.stdout.write(line + '\n')
+			command_temp = [command_arduino_dependencies_download + x, command_arduino_dependencies_install + x]
+			for command in command_temp:
+				with subprocess.Popen(command, stdout=subprocess.PIPE, universal_newlines=True) as process:
+					for line in process.stdout:
+						sys.stdout.write(line + '\n')
 
 	elif(platform_name == "Linux"):
 		user = Linux_Darwin_Get_User()
-		command_arduino_dependencies = 'export PATH="/home/' + user + '/arduino-cli:$PATH";arduino-cli lib download '
+		command_arduino_dependencies_download = 'export PATH="/home/' + user + '/arduino-cli:$PATH";arduino-cli lib download '
+		command_arduino_dependencies_install = 'export PATH="/home/' + user + '/arduino-cli:$PATH";arduino-cli lib install '
 		for x in dependencies_list:
-			command_temp = command_arduino_dependencies + x
-			with subprocess.Popen(command_temp, stdout=subprocess.PIPE, universal_newlines=True, shell=True) as process:
-				for line in process.stdout:
-					sys.stdout.write(line + '\n')
+			command_temp = [command_arduino_dependencies_download + x, command_arduino_dependencies_install + x]
+			for command in command_temp:
+				with subprocess.Popen(command, stdout=subprocess.PIPE, universal_newlines=True, shell=True) as process:
+					for line in process.stdout:
+						sys.stdout.write(line + '\n')
 
 	else:
 		user = Linux_Darwin_Get_User()
-		command_arduino_dependencies = 'export PATH="/Users/' + user + '/arduino-cli:$PATH"; arduino-cli lib download '
+		command_arduino_dependencies_download = 'export PATH="/Users/' + user + '/arduino-cli:$PATH"; arduino-cli lib download '
+		command_arduino_dependencies_install = 'export PATH="/Users/' + user + '/arduino-cli:$PATH"; arduino-cli lib download '
 		for x in dependencies_list:
-			command_temp = command_arduino_dependencies + x
-			with subprocess.Popen(command_temp, stdout=subprocess.PIPE, universal_newlines=True, shell=True) as process:
-				for line in process.stdout:
-					sys.stdout.write(line + '\n')
+			command_temp = [command_arduino_dependencies_download + x, command_arduino_dependencies_install + x]
+			for command in command_temp:
+				with subprocess.Popen(command, stdout=subprocess.PIPE, universal_newlines=True, shell=True) as process:
+					for line in process.stdout:
+						sys.stdout.write(line + '\n')
 
 
 def Get_Details(platform_name, app):
