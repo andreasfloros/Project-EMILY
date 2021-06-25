@@ -118,7 +118,7 @@ def Download_CLI(platform_name, path, app):
 			proc = subprocess.Popen(command_mov, shell=True)
 			proc.communicate()
 
-	elif(platform_name == "Darwin"):
+	else:
 		requests.get(downloadCLI_64bit_darwin)
 		urlretrieve(downloadCLI_64bit_darwin, "ArduinoCLI.tar.gz")
 		tar = tarfile.open("ArduinoCLI.tar.gz", "r:gz")
@@ -141,11 +141,6 @@ def Download_CLI(platform_name, path, app):
 		elif((folder_exists) and ("arduino-cli" not in folder_contents)):
 			proc = subprocess.Popen(command_mov, shell=True)
 			proc.communicate()
-	else:
-		app.menu_label.configure(text = "Cannot run on this Operating System")
-		raise Exception("Cannot run on this Operating System\n")
-
-
 
 
 def Download_Arduino_Dependencies(platform_name, app):
@@ -168,7 +163,7 @@ def Download_Arduino_Dependencies(platform_name, app):
 				for line in process.stdout:
 					sys.stdout.write(line + '\n')
 
-	elif(platform_name == "Darwin"):
+	else:
 		user = Linux_Darwin_Get_User()
 		command_arduino_dependencies = 'export PATH="/Users/' + user + '/arduino-cli:$PATH"; arduino-cli lib download '
 		for x in dependencies_list:
@@ -176,11 +171,6 @@ def Download_Arduino_Dependencies(platform_name, app):
 			with subprocess.Popen(command_temp, stdout=subprocess.PIPE, universal_newlines=True, shell=True) as process:
 				for line in process.stdout:
 					sys.stdout.write(line + '\n')
-	else:
-		app.menu_label.configure(text = "OS not supported")
-		raise Exception("")
-
-
 
 
 def Get_Details(platform_name, app):
@@ -224,7 +214,7 @@ def Get_Details(platform_name, app):
 			app.menu_label.configure(text = "Could not retrieve board details, try again.")
 			raise Exception("")
 
-	elif(platform_name == "Darwin"):
+	else:
 		user = Linux_Darwin_Get_User()
 		command_board_list = 'export PATH="/Users/' + user + '/arduino-cli:$PATH"; arduino-cli board list'
 		with subprocess.Popen(command_board_list, stdout=subprocess.PIPE, universal_newlines=True, shell=True) as process:
@@ -238,13 +228,6 @@ def Get_Details(platform_name, app):
 					return fqbn, com, core
 			app.menu_label.configure(text = "Could not retrieve board details, try again.")
 			raise Exception("")
-
-	else:
-		app.menu_label.configure(text = "OS not supported")
-		raise Exception("")
-
-
-
 
 def Windows_Run_Batch(fqbn, com, core, file_name, app):
 	sys.stdout.write("Downloading core...\n")
@@ -284,8 +267,6 @@ def Linux_Darwin_Get_User():
 		for line in process.stdout:
 			user = line.decode("utf-8").strip()
 	return user
-
-
 
 
 def Linux_Run_Shell(fqbn, com, core, file_name, app):
@@ -363,58 +344,46 @@ def Start_Process(cli_is_installed, platform_name, app, file_name):
 	elif(platform_name == "Darwin"):
 		Darwin_Run_Shell(fqbn, com, core, file_name, app)
 
-	else:
-		app.menu_label.configure(text = "OS not supported")
-		raise Exception("")
-
-
-
 
 def Move_h(source_path, platform_name, curr_path, app, file_name):
+	h_name = "model.h"
 	if(platform_name == "Windows"):
-		h_name = "model.h"
 		source_path = source_path.replace("/", "\\")
-		destination_path = os.path.join(curr_path, file_name, h_name)
-		print("Source: ", source_path, " Destination: ", destination_path)
-		if not os.path.exists(destination_path):
-			shutil.copy(source_path, destination_path)
-		else:
-			os.remove(destination_path)
-			shutil.copy(source_path, destination_path)
-
-		#adding include statement
-		dummy = os.path.join(curr_path, file_name, "dummy.ino")
-		original_ino = os.path.join(curr_path, file_name, file_name+".ino")
-		line_add = '#include "' + h_name +'"'
-		line_there = False
-
-		#checking if the line is already present
-		with open(original_ino, "r") as read_obj:
-			for line in read_obj:
-				if(h_name in line):
-					line_there = True
-
-		if(not line_there):
-			with open(original_ino, "r") as read_obj, open(dummy, "w") as write_obj:
-				write_obj.write(line_add + "\n")
-				for line in read_obj:
-					write_obj.write(line)
-			os.remove(original_ino)
-			os.rename(dummy, original_ino)
+	destination_path = os.path.join(curr_path, file_name, h_name)
+	print("Source: ", source_path, " Destination: ", destination_path)
+	if not os.path.exists(destination_path):
+		shutil.copy(source_path, destination_path)
 	else:
-		app.menu_label.configure(text = "OS not supported")
-		raise Exception("")
+		os.remove(destination_path)
+		shutil.copy(source_path, destination_path)
+
+	#adding include statement
+	dummy = os.path.join(curr_path, file_name, "dummy.ino")
+	original_ino = os.path.join(curr_path, file_name, file_name+".ino")
+	line_add = '#include "' + h_name +'"'
+	line_there = False
+
+	#checking if the line is already present
+	with open(original_ino, "r") as read_obj:
+		for line in read_obj:
+			if(h_name in line):
+				line_there = True
+
+	if(not line_there):
+		with open(original_ino, "r") as read_obj, open(dummy, "w") as write_obj:
+			write_obj.write(line_add + "\n")
+			for line in read_obj:
+				write_obj.write(line)
+		os.remove(original_ino)
+		os.rename(dummy, original_ino)
 
 def check_cli(platform_name, app):
 	if(platform_name == "Windows"):
 			cli_is_installed = Windows_Check_Path()
 	elif(platform_name == "Linux"):
 		cli_is_installed = Linux_Check_Path()
-	elif(platform_name == "Darwin"):
-		cli_is_installed = Darwin_Check_Path()
 	else:
-		app.menu_label.configure(text = "OS not supported")
-		raise Exception("OS Not supported")
+		cli_is_installed = Darwin_Check_Path()
 	return cli_is_installed
 
 
@@ -423,7 +392,9 @@ def send_to_arduino(app):
 		app.menu_label.configure(text = "Converting and uploading model...")
 		h_path = app.browse_model_entry.get()
 		platform_name = check_platform()
-
+		if(platform_name != "Darwin" and platform_name != "Linux" and platform_name != "Windows"):
+			app.menu_label.configure(text = "OS not supported")
+			raise Exception("OS Not supported")
 		if(h_path and h_path.split(".")[-1] == "h"): # this will run if there is any path available, maybe check for the extension?
 			Move_h(h_path, platform_name, wd, app, file_name = "arduino_inference_script")
 		else:
