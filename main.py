@@ -736,6 +736,7 @@ if __name__ == "__main__":
     #root.option_add("*Font", font.nametofont("TkFixedFont"))
     matplotlib.rc("font", family = "Courier New")
     root.title("MLEcosystem")
+    root.iconbitmap(default='Images/e2.ico')
     root.geometry(home_window_size)
     root.resizable(False, False)
     app = main_app(root)
