@@ -141,10 +141,10 @@ class main_app():
             self.upload_model_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["upload_model"], name = "arduino_page")
         else:
             background_label = tk.Label(self.home_page_frame, image = self.images["logo_mac"])
-            self.load_data_button = ttk.Button(self.home_page_frame, image = self.images["load_data"], name = "data_page")
-            self.process_data_button = ttk.Button(self.home_page_frame, image = self.images["process_data"], name = "processing_page")
-            self.train_model_button = ttk.Button(self.home_page_frame, image = self.images["train_model"], name = "training_page")
-            self.upload_model_button = ttk.Button(self.home_page_frame, image = self.images["upload_model"], name = "arduino_page")
+            self.load_data_button = tk.Button(self.home_page_frame, image = self.images["load_data"], name = "data_page")
+            self.process_data_button = tk.Button(self.home_page_frame, image = self.images["process_data"], name = "processing_page")
+            self.train_model_button = tk.Button(self.home_page_frame, image = self.images["train_model"], name = "training_page")
+            self.upload_model_button = tk.Button(self.home_page_frame, image = self.images["upload_model"], name = "arduino_page")
         background_label.place(x=0, y=0, relwidth=1, relheight=1)
         
         self.load_data_button.bind("<ButtonRelease-1>", self.quad_button_callback)
