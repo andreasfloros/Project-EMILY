@@ -56,12 +56,16 @@ except AttributeError:
     wd = os.getcwd()
 
 if os.name == "nt":
+    text_color = "#ffffff"
+
     menu_color = "#08646c"
 
     background_color = "#03989e"
 
     button_color = "#03989e"
 else:
+    text_color = "#000000"
+
     menu_color = "#ececec"
 
     background_color = "#ececec"

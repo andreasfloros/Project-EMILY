@@ -61,11 +61,11 @@ class main_app():
                        "logo_mac" : tk.PhotoImage(file = os.path.join(wd,"Images","logo_mac.png")),
                        "record_button" : tk.PhotoImage(file = os.path.join(wd,"Images","record_button.png"))}
 
-        if os.name == "nt": # looks have been tested on windows, mac and linux haven't been tested properly
-            ttk.Style(root).configure(".", background = background_color, foreground = "#ffffff")
+        if os.name == "nt":
+            ttk.Style(root).configure(".", background = background_color, foreground = text_color)
             ttk.Style(root).configure("TEntry", foreground = "#000000")
             ttk.Style(root).configure("TSpinbox", foreground = "#000000", selectbackground = "#f8f4f4", selectforeground = "#000000")
-            ttk.Style(root).configure("TLabelframe.Label", foreground = "#ffffff")
+            ttk.Style(root).configure("TLabelframe.Label", foreground = text_color)
             ttk.Style(root).configure("menu.TFrame", background = menu_color)
             ttk.Style(root).configure("menu.TLabel", background = menu_color)
             ttk.Style(root).configure("menu.TButton", background = menu_color)
@@ -77,10 +77,10 @@ class main_app():
             ttk.Style(root).configure("menu.TButton", background = "#ececec")
         #matplotlib.rcParams["axes.grid"] = False
         if os.name == "nt":
-            matplotlib.rcParams["text.color"] = "#ffffff"
-            matplotlib.rcParams["axes.labelcolor"] = "#ffffff"
-            matplotlib.rcParams["xtick.color"] = "#ffffff"
-            matplotlib.rcParams["ytick.color"] = "#ffffff"
+            matplotlib.rcParams["text.color"] = text_color
+            matplotlib.rcParams["axes.labelcolor"] = text_color
+            matplotlib.rcParams["xtick.color"] = text_color
+            matplotlib.rcParams["ytick.color"] = text_color
         self.background_frame = ttk.Frame(root)
         self.setup_menu_frame()
         self.setup_home_page()
@@ -135,19 +135,27 @@ class main_app():
         self.home_page_frame = ttk.Frame(self.background_frame)
         if os.name == "nt":
             background_label = tk.Label(self.home_page_frame, image = self.images["logo"])
+            self.load_data_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["load_data"], name = "data_page")
+            self.process_data_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["process_data"], name = "processing_page")
+            self.train_model_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["train_model"], name = "training_page")
+            self.upload_model_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["upload_model"], name = "arduino_page")
         else:
             background_label = tk.Label(self.home_page_frame, image = self.images["logo_mac"])
+            self.load_data_button = ttk.Button(self.home_page_frame, image = self.images["load_data"], name = "data_page")
+            self.process_data_button = ttk.Button(self.home_page_frame, image = self.images["process_data"], name = "processing_page")
+            self.train_model_button = ttk.Button(self.home_page_frame, image = self.images["train_model"], name = "training_page")
+            self.upload_model_button = ttk.Button(self.home_page_frame, image = self.images["upload_model"], name = "arduino_page")
         background_label.place(x=0, y=0, relwidth=1, relheight=1)
-        self.load_data_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["load_data"], name = "data_page")
+        
         self.load_data_button.bind("<ButtonRelease-1>", self.quad_button_callback)
         self.load_data_button.bind("<Enter>", self.show_button_info)
-        self.process_data_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["process_data"], name = "processing_page")
+        
         self.process_data_button.bind("<ButtonRelease-1>", self.quad_button_callback)
         self.process_data_button.bind("<Enter>", self.show_button_info)
-        self.train_model_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["train_model"], name = "training_page")
+        
         self.train_model_button.bind("<ButtonRelease-1>", self.quad_button_callback)
         self.train_model_button.bind("<Enter>", self.show_button_info)
-        self.upload_model_button = tk.Button(self.home_page_frame, activebackground = background_color, bd = 0, bg = button_color, relief = tk.FLAT, overrelief = tk.FLAT, image = self.images["upload_model"], name = "arduino_page")
+        
         self.upload_model_button.bind("<ButtonRelease-1>", self.quad_button_callback)
         self.upload_model_button.bind("<Enter>", self.show_button_info)
         offset = 0.02
@@ -204,7 +212,7 @@ class main_app():
 
     def setup_dataset_source_frame(self):
         self.dataset_source_frame = ttk.Frame(self.data_page_frame)
-        self.dataset_source_label = ttk.Label(self.dataset_source_frame, text = pad_to_max("Data mode:", free = 0))
+        self.dataset_source_label = ttk.Label(self.dataset_source_frame, text = pad_to_max(" Data mode:", free = 0))
         self.browse_dataset_mode = tk.StringVar()
         self.dataset_source_radio_button_make = ttk.Radiobutton(self.dataset_source_frame, text = "Make ", value = "make", variable = self.browse_dataset_mode, command = self.browse_dataset_change_mode)
         self.dataset_source_radio_button_local = ttk.Radiobutton(self.dataset_source_frame, text = "Local ", value = "local", variable = self.browse_dataset_mode)
@@ -220,7 +228,7 @@ class main_app():
 
     def setup_browse_dataset_frame(self):
         self.browse_dataset_frame = ttk.Frame(self.data_page_frame)
-        self.browse_dataset_label = ttk.Label(self.browse_dataset_frame, text = pad_to_max("Browse dataset:", free = 4))
+        self.browse_dataset_label = ttk.Label(self.browse_dataset_frame, text = pad_to_max(" Browse dataset:", free = 4))
         self.browse_dataset_button = ttk.Button(self.browse_dataset_frame, image = self.images["browse_button"], command = self.browse_dataset_button_callback)
         self.browse_dataset_entry = ttk.Entry(self.browse_dataset_frame, exportselection = 0)
         self.browse_dataset_frame.pack(expand = True, fill = tk.X, side = tk.TOP)
@@ -230,7 +238,7 @@ class main_app():
 
     def setup_browse_dataset_global_frame(self):
         self.browse_dataset_global_frame = ttk.Frame(self.data_page_frame)
-        self.browse_dataset_global_label = ttk.Label(self.browse_dataset_global_frame, text = pad_to_max("Dataset destination:", free = 4))
+        self.browse_dataset_global_label = ttk.Label(self.browse_dataset_global_frame, text = pad_to_max(" Dataset destination:", free = 4))
         self.browse_dataset_global_button = ttk.Button(self.browse_dataset_global_frame, image = self.images["browse_button"], command = self.browse_dataset_global_button_callback)
         self.browse_dataset_global_entry = ttk.Entry(self.browse_dataset_global_frame, exportselection = 0)
         self.browse_dataset_global_label.pack(side = tk.LEFT)
@@ -239,7 +247,7 @@ class main_app():
 
     def setup_browse_dataset_make_frame(self):
         self.browse_dataset_make_frame = ttk.Frame(self.data_page_frame)
-        self.browse_dataset_make_label = ttk.Label(self.browse_dataset_make_frame, text = pad_to_max("Labels and samples per label:", free = 4))
+        self.browse_dataset_make_label = ttk.Label(self.browse_dataset_make_frame, text = pad_to_max(" Labels and samples per label:", free = 4))
         self.num_samples_to_make = tk.StringVar(value = "1")
         self.browse_dataset_make_text_box_number = ttk.Spinbox(self.browse_dataset_make_frame, width = 3, from_ = 1, to = 99, textvariable = self.num_samples_to_make, exportselection = 0, increment = 1, state = "readonly")
         self.browse_dataset_make_text_box_label = ttk.Entry(self.browse_dataset_make_frame, exportselection = 0)
@@ -257,7 +265,7 @@ class main_app():
 
     def setup_processing_method_frame(self):
         self.processing_method_frame = ttk.Frame(self.processing_page_frame)
-        self.processing_method_label = ttk.Label(self.processing_method_frame, text = pad_to_max("Processing method:", free = 0))
+        self.processing_method_label = ttk.Label(self.processing_method_frame, text = pad_to_max(" Processing method:", free = 0))
         self.selected_processing_method = tk.StringVar()
 
         self.processing_method_radio_button_none = ttk.Radiobutton(self.processing_method_frame, text = "AVG ", value = "NONE", variable = self.selected_processing_method, command = self.processing_method_radio_button_callback)
@@ -275,7 +283,7 @@ class main_app():
 
     def setup_sample_rate_frame(self):
         self.sample_rate_frame = ttk.Frame(self.data_page_frame)
-        self.sample_rate_label = ttk.Label(self.sample_rate_frame, text = pad_to_max("Sample rate (Hz):", free = -4))
+        self.sample_rate_label = ttk.Label(self.sample_rate_frame, text = pad_to_max(" Sample rate (Hz):", free = -4))
         self.selected_sample_rate = tk.IntVar()
         self.sample_rate_radio_button_16000 = ttk.Radiobutton(self.sample_rate_frame, text = "16000", value = "16000", variable = self.selected_sample_rate)
         self.sample_rate_radio_button_16000.invoke()
@@ -287,7 +295,7 @@ class main_app():
 
     def setup_expected_duration_frame(self):
         self.expected_duration_frame = ttk.Frame(self.data_page_frame)
-        self.expected_duration_label = ttk.Label(self.expected_duration_frame, text = pad_to_max("Expected duration (s): 1.00", "0.10"))
+        self.expected_duration_label = ttk.Label(self.expected_duration_frame, text = pad_to_max(" Expected duration (s): 1.00", "0.10"))
         self.expected_duration_scale = ttk.Scale(self.expected_duration_frame, from_ = 0.1, to = 2, value = 1, command = self.expected_duration_scale_callback)
         self.expected_duration_label_end = ttk.Label(self.expected_duration_frame, text = "2.00")
         self.expected_duration_frame.pack(expand = True, fill = tk.X, side = tk.TOP)
@@ -297,7 +305,7 @@ class main_app():
 
 
     def setup_window_size_frame(self):
-        self.window_size_label = ttk.Label(self.window_size_frame, text = pad_to_max("Window size (samples, log2):"))
+        self.window_size_label = ttk.Label(self.window_size_frame, text = pad_to_max(" Window size (samples, log2):"))
         self.selected_window_size = tk.StringVar(value = "9")
         self.window_size_spinbox = ttk.Spinbox(self.window_size_frame, width = 3, from_ = 5, to = 12, command = self.window_size_spinbox_callback, textvariable = self.selected_window_size, exportselection = 0, increment = 1, state = "readonly")
         self.sample_rate_radio_button_16000.config(command = self.window_size_spinbox_callback)
@@ -311,7 +319,7 @@ class main_app():
         self.window_size_label_end.pack(side = tk.LEFT, expand = True)
 
     def setup_window_stride_frame(self):
-        self.window_stride_label = ttk.Label(self.window_stride_frame, text = pad_to_max("Window stride (s): 0.03", "0.01"))
+        self.window_stride_label = ttk.Label(self.window_stride_frame, text = pad_to_max(" Window stride (s): 0.03", "0.01"))
         self.window_stride_scale = ttk.Scale(self.window_stride_frame, from_ = 0.01, to = 0.33, value = 0.03, command = self.window_stride_scale_callback)
         self.window_stride_label_end = ttk.Label(self.window_stride_frame, text = "0.33")
         self.window_stride_frame.pack(expand = True, fill = tk.X, side = tk.TOP)
@@ -352,7 +360,7 @@ class main_app():
             self.record_dataset_make_frame.pack_forget()
             self.expected_duration_frame.pack_forget()
             self.sample_rate_frame.pack_forget()
-            self.browse_dataset_label.config(text=pad_to_max("Dataset URL:", free = 4))
+            self.browse_dataset_label.config(text=pad_to_max(" Dataset URL:", free = 4))
             self.browse_dataset_global_frame.pack(fill = tk.X, side = tk.TOP, expand = True)
             self.expected_duration_frame.pack(expand = True, fill = tk.X, side = tk.TOP)
             self.sample_rate_frame.pack(fill = tk.X, expand = True)
@@ -360,7 +368,7 @@ class main_app():
         elif self.browse_dataset_mode.get() == "make":
             self.browse_dataset_button.config(image = self.images["browse_button"])
             self.browse_dataset_global_frame.pack_forget()
-            self.browse_dataset_label.config(text=pad_to_max("Dataset destination:", free = 4))
+            self.browse_dataset_label.config(text=pad_to_max(" Dataset destination:", free = 4))
             self.expected_duration_frame.pack_forget()
             self.sample_rate_frame.pack_forget()
             self.browse_dataset_make_frame.pack(fill = tk.X, side = tk.TOP, expand = True)
@@ -369,7 +377,7 @@ class main_app():
             self.sample_rate_frame.pack(fill = tk.X, expand = True)
 
         else:
-            self.browse_dataset_label.config(text=pad_to_max("Browse dataset:", free = 4))
+            self.browse_dataset_label.config(text=pad_to_max(" Browse dataset:", free = 4))
             self.browse_dataset_button.config(image = self.images["browse_button"])
             self.browse_dataset_global_frame.pack_forget()
             self.browse_dataset_make_frame.pack_forget()
@@ -388,7 +396,7 @@ class main_app():
 
     def expected_duration_scale_callback(self, _):
         value = round_to_x(self.expected_duration_scale)
-        self.expected_duration_label.config(text = pad_to_max("Expected duration (s): " + "{:.2f}".format(value), "0.10"))
+        self.expected_duration_label.config(text = pad_to_max(" Expected duration (s): " + "{:.2f}".format(value), "0.10"))
         value = round(value / 3, 2)
         self.window_stride_scale.config(to = value)
         self.window_stride_label_end.config(text = "{:.2f}".format(value))
@@ -401,7 +409,7 @@ class main_app():
 
     def window_stride_scale_callback(self, _):
         value = round_to_x(self.window_stride_scale)
-        self.window_stride_label.config(text = pad_to_max("Window stride (s): " + "{:.2f}".format(value), "0.01"))
+        self.window_stride_label.config(text = pad_to_max(" Window stride (s): " + "{:.2f}".format(value), "0.01"))
 
     def setup_streamlining_frame(self):
         self.streamlining_frame = ttk.Frame(self.processing_page_frame)
