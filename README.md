@@ -15,13 +15,15 @@ Our application is an all-in-one package.
 
 Run the main.py python script from the UI folder.
 
-__Requirements:__ For this project we only require that Python and PIP are installed. After this please run ```pip install -r requirements.txt``` using the requirements.txt file of the repository. This will automatically install all other packages used in the project.
+__Requirements:__ For this project we only require that Python (3.9) and PIP are installed. After this please run ```pip install -r requirements.txt``` using the requirements.txt file of the repository. This will automatically install all other packages used in the project.
 
-Tested Operating Systems: Windows 10, Linux (partial support), MacOS (partial support)
+If you want you can use a virtual environment and install the requirements there (```pip install virtualenv```).
+
+Tested Operating Systems: Windows 10, Linux, MacOS.
 
 Tested Arduino Boards: [Arduino Nano 33 BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense)
 
-__Executable:__ Download / Clone this repo and make sure you have the above requirements installed.
+__Executable (users: ignore this for now):__ Download / Clone this repo and make sure you have the above requirements installed.
 
 Open the ```emily.spec``` file and change the ```pathex``` to the root directory of the project.
 
